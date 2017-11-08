@@ -12,7 +12,7 @@ CLEAR_SCREEN = "\033[2J\033[1;1H"
 NEW_LINE = '\n'
 
 
-def get_neighbor_cells(cell, bounded):
+def get_neighbor_cells(cell, is_bounded):
     # This is a generator and will hold the neighbors created until the end
     for y in range(cell.y - 1, cell.y + 2):
         for x in range(cell.x - 1, cell.x + 2):
@@ -20,7 +20,7 @@ def get_neighbor_cells(cell, bounded):
             if (x, y) != (cell.x, cell.y):
                 # Handling for the bounded option
                 # All cells generated need to be positive and less than or equal to the matrix
-                if bounded:
+                if is_bounded:
                     if (0 <= x <= X) and (0 <= y <= Y):
                         yield Cell(x, y)
                 else:
@@ -101,15 +101,20 @@ if __name__ == '__main__':
 
     except ValueError:
 
+        # Give the user another chance to input the numbers
         try:
             print("Acceptable values are positive integers greater than 1!")
             X = int(input("Enter the number of columns: "))
             Y = int(input("Enter the number of rows: "))
 
+            if X <= 2 or Y <= 2:
+                raise ValueError
+
         except ValueError:
             print("You tried! The system will pick now")
-            X = 10
-            Y = 10
+            time.sleep(1)
+            X = random.randrange(25)
+            Y = random.randrange(25)
 
 f = generate_initial_board(X, Y)
 is_bounded = True
