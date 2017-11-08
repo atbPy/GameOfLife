@@ -2,7 +2,7 @@ from game import (
     Cell, get_neighbor_cells, get_neighbor_count,
     generate_next_board, board_to_display)
 import unittest
-from collections import namedtuple, Counter
+from collections import Counter
 
 
 class GameOfLifeTest(unittest.TestCase):
