@@ -4,6 +4,8 @@ import random
 import sys
 
 Cell = namedtuple('Cell', ['x', 'y'])
+X = 10
+Y = 10
 
 # Constants
 WHITE_SPACE = u"\u25A1"
@@ -12,7 +14,7 @@ CLEAR_SCREEN = "\033[2J\033[1;1H"
 NEW_LINE = '\n'
 
 
-def get_neighbor_cells(cell, is_bounded):
+def get_neighbor_cells(cell, is_bounded=True):
     # This is a generator and will hold the neighbors created until the end
     for y in range(cell.y - 1, cell.y + 2):
         for x in range(cell.x - 1, cell.x + 2):
@@ -27,7 +29,7 @@ def get_neighbor_cells(cell, is_bounded):
                     yield Cell(x, y)
 
 
-def get_neighbor_count(board):
+def get_neighbor_count(board, is_bounded=True):
     # The checks all of the Alive cells and finds their neighbors
     neighbor_counts = Counter()
     for cell in board:
@@ -51,11 +53,11 @@ def generate_next_board(board):
     return new_board
 
 
-def generate_initial_board(x, y):
-    # default values or x=8, y=6
+def generate_initial_board(X=10, Y=10):
+    # Generate the board with randomly selected cells
     board = set()
-    for row in range(y):
-        for column in range(x):
+    for row in range(Y):
+        for column in range(X):
             if random.randrange(2) == 1:
                 board.add(Cell(int(column), int(row)))
 
@@ -116,18 +118,18 @@ if __name__ == '__main__':
             X = random.randrange(25)
             Y = random.randrange(25)
 
-f = generate_initial_board(X, Y)
-is_bounded = True
+    f = generate_initial_board(X, Y)
+    is_bounded = True
 
-for generations in range(20):
-    # Input the current board and return the updated board as a Set()
-    f = generate_next_board(f)
+    for generations in range(20):
+        # Input the current board and return the updated board as a Set()
+        f = generate_next_board(f)
 
-    # Clear the screen
-    print(CLEAR_SCREEN)
+        # Clear the screen
+        print(CLEAR_SCREEN)
 
-    # Display the board
-    print(board_to_display(f, X, Y))
+        # Display the board
+        print(board_to_display(f, X, Y))
 
-    # Sleep for a 100ms
-    time.sleep(0.1)
+        # Sleep for a 100ms
+        time.sleep(0.1)
