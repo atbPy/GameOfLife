@@ -100,9 +100,16 @@ if __name__ == '__main__':
         time.sleep(1)
 
     except ValueError:
-        print("Acceptable values are positive integers greater than 1!")
-        X = int(input("Enter the number of columns"))
-        Y = int(input("Enter the number of rows"))
+
+        try:
+            print("Acceptable values are positive integers greater than 1!")
+            X = int(input("Enter the number of columns: "))
+            Y = int(input("Enter the number of rows: "))
+
+        except ValueError:
+            print("You tried! The system will pick now")
+            X = 10
+            Y = 10
 
 f = generate_initial_board(X, Y)
 is_bounded = True
