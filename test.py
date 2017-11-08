@@ -36,7 +36,7 @@ class GameOfLifeTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_single_generate_next_board(self):
-        board = set([Cell(0, 0)])
+        board = set([Cell(0, 0), Cell(1,0)])
         expected = set()
         actual = generate_next_board(board)
         self.assertEqual(expected, actual)
