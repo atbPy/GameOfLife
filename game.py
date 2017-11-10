@@ -15,13 +15,15 @@ NEW_LINE = '\n'
 
 
 def get_neighbor_cells(cell, is_bounded=True):
-    # This is a generator and will hold the neighbors created until the end
+    """
+    This is a generator function that yields results of the neighbors
+    :param cell: named tuple
+    :param is_bounded: boolean default to True
+    """
     for y in range(cell.y - 1, cell.y + 2):
         for x in range(cell.x - 1, cell.x + 2):
-            # Check to make sure that the tuple generated is not equal to the cell passed to the function
             if (x, y) != (cell.x, cell.y):
                 # Handling for the bounded option
-                # All cells generated need to be positive and less than or equal to the matrix
                 if is_bounded:
                     if (0 <= x <= X) and (0 <= y <= Y):
                         yield Cell(x, y)
@@ -30,10 +32,15 @@ def get_neighbor_cells(cell, is_bounded=True):
 
 
 def get_neighbor_count(board, is_bounded=True):
-    # The checks all of the Alive cells and finds their neighbors
+
+    """
+    This is the most important function of the program to check each alive cell to find neighbors
+    :param board: set with named tuples
+    :param is_bounded: boolean default to True
+    :return: a Count object with counts for each named tuple
+    """
     neighbor_counts = Counter()
     for cell in board:
-        # call to the generator
         for neighbor in get_neighbor_cells(cell, is_bounded):
             neighbor_counts[neighbor] += 1
 
@@ -41,12 +48,19 @@ def get_neighbor_count(board, is_bounded=True):
 
 
 def generate_next_board(board):
+    """
+    Generate the next board based on the neighbor counts from alive cells
+    :param board: set with named tuples
+    :return: a new set with the alive cells
+    """
     new_board = set()
-    # Get the dict key and value at once
     neighbors = get_neighbor_count(board)
     for cell, count in neighbors.items():
-        # A cell generates if it has three neighbors
-        # An alive cell remains if it has two neighbors
+        """
+        Game rules:
+        A cell generates if it has three neighbors
+        An alive cell remains if it has two neighbors
+        """
         if count == 3 or (cell in board and count == 2):
             new_board.add(cell)
 
@@ -54,7 +68,13 @@ def generate_next_board(board):
 
 
 def generate_initial_board(X=10, Y=10):
-    # Generate the board with randomly selected cells
+
+    """
+    Generates the intial set for the board
+    :param X: positive integer
+    :param Y: positive integer
+    :return: set with named tuples
+    """
     board = set()
     for row in range(Y):
         for column in range(X):
@@ -65,10 +85,15 @@ def generate_initial_board(X=10, Y=10):
 
 
 def board_to_display(board, column, row):
-    # Start with an empty string
+    """
+    Makes a string for display on the console
+    :param board: set with named tuples
+    :param column: positive integer
+    :param row: positive integer
+    :return: string with whitespace stripped
+    """
     board_string = ""
 
-    # Order must be row then column
     for y in range(row):
         for x in range(column):
             if Cell(x, y) in board:
@@ -76,10 +101,8 @@ def board_to_display(board, column, row):
             else:
                 board_string += WHITE_SPACE
 
-        # After the last column insert a new line character
         board_string += NEW_LINE
 
-    # String out extra white space characters
     return board_string.strip()
 
 
@@ -103,7 +126,6 @@ if __name__ == '__main__':
 
     except ValueError:
 
-        # Give the user another chance to input the numbers
         try:
             print("Acceptable values are positive integers greater than 1!")
             X = int(input("Enter the number of columns: "))
@@ -122,14 +144,10 @@ if __name__ == '__main__':
     is_bounded = True
 
     for generations in range(20):
-        # Input the current board and return the updated board as a Set()
         f = generate_next_board(f)
 
-        # Clear the screen
         print(CLEAR_SCREEN)
 
-        # Display the board
         print(board_to_display(f, X, Y))
 
-        # Sleep for a 100ms
         time.sleep(0.1)
